@@ -1,0 +1,177 @@
+<html>
+
+<head>
+    <title>IO Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/node_modules/twbs-pagination/jquery.twbsPagination.js"></script>
+    <script src="/node_modules/twbs-pagination/jquery.twbsPagination.min.js"></script>
+    <link rel="shortcut icon" href="">
+
+    <style>
+        body {
+            margin-top: 30px;
+        }
+
+        #messageArea {
+            display: none;
+        }
+
+        .message {
+            border: 2px solid #dedede;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+
+        .card {
+            width: 200px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page-active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="userFormArea" class="row">
+            <div class="col-md-12">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label>Enter Username</label>
+                        <input class="form-control" id="username"></input>
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="messageArea" class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-">
+                        <div class="card card-body bg-light">
+                            <h3>Online Users</h3>
+                            <ul class="list-group" id="users"></ul>
+                        </div>
+                        <div class="card card-body bg-light">
+                            <h3>Trivia</h3>
+                            <span id="number"></span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="chat" id="chat" style="height:600px;">
+                        <div class="page" id="page1"></div>
+                        </div>
+                        <div class="row"><ul id="pagination" class="pagination-sm"></ul></div>
+                        <form id="messageForm">
+                            <div class="form-group">
+                                <label>Enter Message</label>
+                                <textarea class="form-control" id="message"></textarea>
+                                <br>
+                                <input type="submit" class="btn btn-primary" value="Send Message">
+                                <br>
+                                <p id="conso"></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var pag = 1;
+        var counter = 0;
+        $(function () {
+            var socket = io.connect();
+            var $messageForm = $('#messageForm');
+            var $message = $('#message');
+            var $chat = $('#chat');
+            var $messageArea = $('#messageArea');
+            var $userFormArea = $('#userFormArea');
+            var $userForm = $('#userForm');
+            var $users = $('#users');
+            var $username = $('#username');
+
+            $messageForm.submit(function (e) {
+                e.preventDefault();
+                socket.emit('send message', $message.val());
+                $message.val('');
+            });
+
+            socket.on('new message', function (data) {
+                if(counter % 5 == 0 && counter > 1) {
+                    pag ++;
+                    $chat.append('<div class="page" id="page'+ pag + '"></div>')
+                    UpdatePagination();
+                }
+                $('#page' + pag).append('<div class="message"><strong>' + data.user + '</strong>:<p>' + data.msg +
+                    '<span class="time-right">' + data.time + '</span></p></div>')
+                counter ++;
+            });
+
+            $userForm.submit(function (e) {
+                e.preventDefault();
+                socket.emit('new user', $username.val(), function (data) {
+                    if (data) {
+                        $userFormArea.hide();
+                        $messageArea.show();
+                    }
+                });
+                $username.val('');
+            });
+
+            socket.on('get users', function (data) {
+                var html = '';
+                for (i = 0; i < data.length; i++) {
+                    html += '<li class="list-group-item">' + data[i] + '</li>';
+                }
+                $users.html(html);
+            })
+        });
+        $(function () {
+            $.get('http://numbersapi.com/random/trivia', function (data) {
+                $('#number').text(data);
+            });
+        });
+
+        var opts = {
+            totalPages: pag ,
+            visiblePages: 5,
+            first: 'First',
+            prev: 'Previous',
+            next: 'Next',
+            last: 'Last',
+            loop: false,
+            onPageClick: function (event, page) {
+                    $('.page-active').removeClass('page-active');
+                    $('#page' + page).addClass('page-active');
+                },
+            paginationClass: 'pagination',
+        }
+
+        $('#pagination').twbsPagination(opts);
+
+        function UpdatePagination() {
+        $('.pagination').twbsPagination('destroy');
+        $('.pagination').twbsPagination($.extend(opts, {
+            totalPages: pag,
+            startPage: pag}));
+        }
+    </script>
+</body>
+
+</html>
