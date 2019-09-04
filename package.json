@@ -11,6 +11,7 @@
   "dependencies": {
     "restify": "*",
     "socket.io": "*",
-    "twbs-pagination": "^1.4.1"
+    "twbs-pagination": "^1.4.1",
+    "fs": "*"
   }
 }

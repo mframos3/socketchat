@@ -1,7 +1,16 @@
-var restify = require('restify');
-var server = restify.createServer();
-var io = require('socket.io').listen(server.server);
 
+var fs = require('fs');
+
+var options = {
+    key: fs.readFileSync('etc/letsencrypt/live/socketchat.com/privkey.pem'),
+    certificate: fs.readFileSync('etc/letsencrypt/live/socketchat.com/fullchain.pem')
+
+}
+
+
+var restify = require('restify');
+var server = restify.createServer(options);
+var io = require('socket.io').listen(server.server);
 users = [];
 connections = [];
 
