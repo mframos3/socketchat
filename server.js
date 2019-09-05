@@ -1,18 +1,10 @@
-
-var fs = require('fs');
-
-var options = {
-    key: fs.readFileSync('etc/letsencrypt/live/socketchat.com/privkey.pem'),
-    certificate: fs.readFileSync('etc/letsencrypt/live/socketchat.com/fullchain.pem')
-
-}
-
-
 var restify = require('restify');
-var server = restify.createServer(options);
+var server = restify.createServer();
+var request = require('request');
 var io = require('socket.io').listen(server.server);
 users = [];
 connections = [];
+trivia = "";
 
 function respond(req, res, next) {
     res.send('hello ' + req.params.name);
@@ -25,6 +17,8 @@ server.get('/*', restify.plugins.serveStatic({
     directory: __dirname,
     default: 'index.html'
 }));
+
+
 
 io.sockets.on('connection', function (socket) {
     connections.push(socket);
@@ -49,6 +43,11 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('new user', function (data, callback) {
+        request.get("http://numbersapi.com/random/trivia", (err, res, body) =>
+        {
+        trivia = body;
+        });
+
         callback(true);
         socket.username = data;
         users.push(socket.username);
@@ -57,5 +56,6 @@ io.sockets.on('connection', function (socket) {
 
     function updateUsernames() {
         io.sockets.emit('get users', users);
+        io.sockets.emit('get trivia', trivia);
     }
 });

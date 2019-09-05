@@ -12,6 +12,6 @@
     "restify": "*",
     "socket.io": "*",
     "twbs-pagination": "^1.4.1",
-    "fs": "*"
+    "request": "*"
   }
 }
