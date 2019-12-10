@@ -9,9 +9,10 @@
   "author": "Matias",
   "license": "ISC",
   "dependencies": {
+    "node-vault": "*",
+    "request": "*",
     "restify": "*",
     "socket.io": "*",
-    "twbs-pagination": "^1.4.1",
-    "request": "*"
+    "twbs-pagination": "^1.4.1"
   }
 }

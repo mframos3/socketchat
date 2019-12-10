@@ -79,6 +79,7 @@
                         <div class="row"><ul id="pagination" class="pagination-sm"></ul></div>
                         <form id="messageForm">
                             <div class="form-group">
+                                <span id="test"></span>
                                 <label>Enter Message</label>
                                 <textarea class="form-control" id="message"></textarea>
                                 <br>
@@ -95,6 +96,8 @@
     <script>
         var pag = 1;
         var counter = 0;
+        var token = "";
+        const Http = new XMLHttpRequest();
         $(function () {
             var socket = io.connect();
             var $messageForm = $('#messageForm');
@@ -106,22 +109,45 @@
             var $users = $('#users');
             var $username = $('#username');
             var $number = $('#number');
+            var $test = $('#test');
 
             $messageForm.submit(function (e) {
                 e.preventDefault();
-                socket.emit('send message', $message.val());
-                $message.val('');
+                const Http = new XMLHttpRequest();
+                const encryptUrl = 'http://127.0.0.1:8200/v1/transit/encrypt/orders';
+                Http.open("POST", encryptUrl);
+                Http.setRequestHeader("X-Vault-Token", "s.aPRzxcWDX3kjmBF4BD9dQGn7");
+                Http.send(JSON.stringify({"plaintext": btoa($message.val())}));
+                Http.onreadystatechange = (e) => {
+                    if(Http.readyState === XMLHttpRequest.DONE && Http.status === 200) {
+                        var json = JSON.parse(Http.responseText).data.ciphertext;
+                        socket.emit('send message', JSON.stringify(json));
+                        $message.val('');
+                    }
+                }
+            
             });
 
             socket.on('new message', function (data) {
-                if(counter % 5 == 0 && counter > 1) {
-                    pag ++;
-                    $chat.append('<div class="page" id="page'+ pag + '"></div>')
-                    UpdatePagination();
+                const Http = new XMLHttpRequest();
+                const decryptURL = 'http://127.0.0.1:8200/v1/transit/decrypt/orders';
+                Http.open("POST", decryptURL);
+                Http.setRequestHeader("X-Vault-Token", "s.aPRzxcWDX3kjmBF4BD9dQGn7");
+                Http.send(JSON.stringify({"ciphertext": JSON.parse(data.msg)}));
+                Http.onreadystatechange = (e) => {
+                    if(Http.readyState === XMLHttpRequest.DONE && Http.status === 200) {
+                        var json = JSON.parse(Http.responseText).data.plaintext;
+                        if(counter % 5 == 0 && counter > 1) {
+                            pag ++;
+                            $chat.append('<div class="page" id="page'+ pag + '"></div>')
+                            UpdatePagination();
+                        }
+                        $('#page' + pag).append('<div class="message"><strong>' + data.user + '</strong>:<p>' + atob(json) +
+                            '<span class="time-right">' + data.time + '</span></p></div>')
+                        counter ++;
+                        
+                    }
                 }
-                $('#page' + pag).append('<div class="message"><strong>' + data.user + '</strong>:<p>' + data.msg +
-                    '<span class="time-right">' + data.time + '</span></p></div>')
-                counter ++;
             });
 
             $userForm.submit(function (e) {
@@ -149,6 +175,8 @@
                 }
             })
         });
+
+    
 
         var opts = {
             totalPages: pag ,
