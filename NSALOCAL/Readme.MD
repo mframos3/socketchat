@@ -82,7 +82,9 @@ Luego en la instancia, se debe instalar el *CloudWatch Agent* a continuación se
 ### Prometheus
 A la aplicación además se conectó con una herramienta de monitoreo. En este caso `Prometheus`.
 
-Para hacer un *live review* ingresar **[Aquí](http://ec2-3-136-210-239.us-east-2.compute.amazonaws.com:9090/graph)**
+Para hacer un *live review* ingresar **[Aquí](http://socketchat.tk:9090/graph)** 
+
+Si no funciona el link anterior prueba pinchando [Aquí](http://ec2-3-136-210-239.us-east-2.compute.amazonaws.com:9090/graph)
 
 La instalación de Prometheus consistió de los siguientes pasos:
 
