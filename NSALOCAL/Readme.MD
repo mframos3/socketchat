@@ -1,5 +1,6 @@
-### Local NSA: Monitoreo de lo que tengan.
+## Local NSA: Monitoreo de lo que tengan.
 
+### CloudWatch
 Al ser una aplicación tan sencilla, el único log que presenta es cuando se conecta o desconecta un socket del chat. 
 
 
@@ -78,7 +79,7 @@ Luego en la instancia, se debe instalar el *CloudWatch Agent* a continuación se
         }
 }
 ```
-
+### Prometheus
 A la aplicación además se conectó con una herramienta de monitoreo. En este caso `Prometheus`.
 
 Para hacer un *live review* ingresar **[Aquí](http://ec2-3-136-210-239.us-east-2.compute.amazonaws.com:9090/graph)**
