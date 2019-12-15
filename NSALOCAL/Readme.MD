@@ -5,33 +5,33 @@ Al ser una aplicación tan sencilla, el único log que presenta es cuando se con
 
 `Connections.log`
 
-`2019.12.11, 20:47:14.0285 UTC -> Socket connected successfully
-2019.12.11, 20:47:18.0063 UTC -> Disconnected: sockets disconnected
-2019.12.11, 21:54:58.0879 UTC -> Socket connected successfully
-2019.12.12, 00:25:30.0268 UTC -> Socket connected successfully
-2019.12.12, 00:44:25.0879 UTC -> Socket connected successfully
-2019.12.12, 03:39:26.0095 UTC -> Socket connected successfully`
+`2019.12.11, 20:47:14.0285 UTC -> Socket connected successfully`
+
+`2019.12.11, 20:47:18.0063 UTC -> Disconnected: sockets disconnected`
+
+...
 
 Este log, está siendo capturado por el servicio de *AWS CloudWatch* y mostrado en la consola como se aprecia a continuación.
 
-![CloudWatchConsole](socketchat/NSALOCAL/awsCloudWatch.png)
+![CloudWatchConsole](awsCloudWatch.png)
 
 Para que esa conexión funcionara, los pasos realizados fueron. 
 
 Crear y asignar un *IAM ROLE* a la instancia EC2
 
-![Role](socketchat/NSALOCAL/role.png)
+![Role](role.png)
 
 Crear un *Log group* para la instancia. 
 
-![logGroup](socketchat/NSALOCAL/logGroup.png)
+![logGroup](logGroup.png)
 
 
 Luego en la instancia, se debe instalar el *CloudWatch Agent* a continuación se deja el archivo de configuración utilizado para el agente.
 
 `/opt/aws/amazon-cloudwatch-agent/bin/config.json`
 
-```json{
+```js
+{
         "agent": {
                 "metrics_collection_interval": 10,
                 "run_as_user": "root"
@@ -134,4 +134,4 @@ El último paso, fue habilitar en el *security group* de la instancia un inbound
 
 Ejemplo de medición:
 
-![prometheus](socketchat/NSALOCAL/prometheus.png)
+![prometheus](prometheus.png)
