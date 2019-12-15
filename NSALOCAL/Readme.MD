@@ -14,17 +14,17 @@ Al ser una aplicación tan sencilla, el único log que presenta es cuando se con
 
 Este log, está siendo capturado por el servicio de *AWS CloudWatch* y mostrado en la consola como se aprecia a continuación.
 
-![CloudWatchConsole](/awsCloudWatch.png)
+![CloudWatchConsole](socketchat/NSALOCAL/awsCloudWatch.png)
 
 Para que esa conexión funcionara, los pasos realizados fueron. 
 
 Crear y asignar un *IAM ROLE* a la instancia EC2
 
-![Role](role.png)
+![Role](socketchat/NSALOCAL/role.png)
 
 Crear un *Log group* para la instancia. 
 
-![logGroup](/logGroup.png)
+![logGroup](socketchat/NSALOCAL/logGroup.png)
 
 
 Luego en la instancia, se debe instalar el *CloudWatch Agent* a continuación se deja el archivo de configuración utilizado para el agente.
@@ -134,4 +134,4 @@ El último paso, fue habilitar en el *security group* de la instancia un inbound
 
 Ejemplo de medición:
 
-![prometheus](/prometheus.png)
+![prometheus](socketchat/NSALOCAL/prometheus.png)
