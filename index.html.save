@@ -144,7 +144,7 @@
                         }
                         $('#page' + pag).append('<div class="message"><strong>' + data.user + '</strong>:<p>' + atob(json) +
                             '<span class="time-right">' + data.time + '</span></p></div>')
-                        counter ++;
+xx                        counter ++;
                         
                     }
                 }

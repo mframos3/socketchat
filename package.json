@@ -9,6 +9,7 @@
   "author": "Matias",
   "license": "ISC",
   "dependencies": {
+    "log-to-file": "^2.0.2",
     "node-vault": "*",
     "request": "*",
     "restify": "*",
