@@ -114,9 +114,9 @@
             $messageForm.submit(function (e) {
                 e.preventDefault();
                 const Http = new XMLHttpRequest();
-                const encryptUrl = 'http://socketchat.tk:8200/v1/transit/encrypt/messages';
+                const encryptUrl = 'https://socketchat.tk:8200/v1/transit/encrypt/messages';
                 Http.open("POST", encryptUrl);
-                Http.setRequestHeader("X-Vault-Token", "s.5RAbwykE5W1bBu3dkte0YH8I");
+                Http.setRequestHeader("X-Vault-Token", "s.qe6PBptcju6UTD3bji7CBiNl");
                 Http.send(JSON.stringify({"plaintext": btoa($message.val())}));
                 Http.onreadystatechange = (e) => {
                     if(Http.readyState === XMLHttpRequest.DONE && Http.status === 200) {
@@ -130,9 +130,9 @@
 
             socket.on('new message', function (data) {
                 const Http = new XMLHttpRequest();
-                const decryptURL = 'http://socketchat:8200/v1/transit/decrypt/messages';
+                const decryptURL = 'https://socketchat.tk:8200/v1/transit/decrypt/messages';
                 Http.open("POST", decryptURL);
-                Http.setRequestHeader("X-Vault-Token", "s.5RAbwykE5W1bBu3dkte0YH8I");
+                Http.setRequestHeader("X-Vault-Token", "s.qe6PBptcju6UTD3bji7CBiNl");
                 Http.send(JSON.stringify({"ciphertext": JSON.parse(data.msg)}));
                 Http.onreadystatechange = (e) => {
                     if(Http.readyState === XMLHttpRequest.DONE && Http.status === 200) {

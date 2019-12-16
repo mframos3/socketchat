@@ -35,7 +35,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('send message', function (data) {
-	console.log(data);
+	log(socket.username +": "+ data, "connections.log");
         var today = new Date();
         var timestamp = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         io.sockets.emit('new message', {
